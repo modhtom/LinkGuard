@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:17
+    container_name: LinkGuard-postgres-db
+    environment:
+      POSTGRES_DB: LinkGuard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: modhtom
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d LinkGuard"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    container_name: LinkGuard-proxy-redis-1
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: LinkGuard-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_URL=jdbc:postgresql://db:5432/LinkGuard
+      - DB_USER=postgres
+      - DB_PASS=modhtom
+      - JWT_SECRET_KEY=B0E29A9E0A6A4D3A8F0B4C8A6F1BV2D5B8F3C7A1D9E0F2A4B8E3C7A1F0B4D8A9

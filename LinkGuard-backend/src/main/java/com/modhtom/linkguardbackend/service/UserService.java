@@ -15,11 +15,10 @@ import java.util.UUID;
 public class UserService {
     @Autowired
     private UserRepository repo;
-    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 
-    public UserRespondDTO updateUser(UUID userId, UserRequestDTO userRequestDTO) {
-        User existingUser = repo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found!"));
+    public UserRespondDTO updateUser(String userName, UserRequestDTO userRequestDTO) {
+        User existingUser = repo.findUserByUsername(userName);
 
         boolean isUpdated = false;
 
@@ -55,5 +54,10 @@ public class UserService {
         dto.setCreated_at(user.getCreated_at());
         dto.setUpdated_at(user.getUpdated_at());
         return dto;
+    }
+
+    public UserRespondDTO getUser(String userName) {
+        User user = repo.findUserByUsername(userName);
+        return mapToUserRespondDTO(user);
     }
 }

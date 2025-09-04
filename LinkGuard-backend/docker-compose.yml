@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: modhtom
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
@@ -40,6 +40,12 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - DB_URL=jdbc:postgresql://db:5432/LinkGuard
-      - DB_USER=postgres
-      - DB_PASS=modhtom
-      - JWT_SECRET_KEY=B0E29A9E0A6A4D3A8F0B4C8A6F1BV2D5B8F3C7A1D9E0F2A4B8E3C7A1F0B4D8A9
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=modhtom
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECURITY_NAME=user
+      - SECURITY_PASSWORD=supersecretpassword
+      - JWT_KEY=B0E29A9E0A6A4D3A8F0B4C8A6F1BV2D5B8F3C7A1D9E0F2A4B8E3C7A1F0B4D8A9
+volumes:
+  postgres_data:

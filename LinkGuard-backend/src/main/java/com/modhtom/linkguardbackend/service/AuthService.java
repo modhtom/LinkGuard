@@ -18,14 +18,16 @@ import java.util.List;
 
 @Service
 public class AuthService {
-    @Autowired
     private UserRepository repo;
-    @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
     private JwtService jwtService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
-
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public AuthService(UserRepository repo,  AuthenticationManager authenticationManager, JwtService jwtService) {
+        this.repo = repo;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
+    }
     @Transactional
     public UserRespondDTO addUser(UserRequestDTO userRequestDTO) {
         if (repo.findUserByUsername(userRequestDTO.getUsername())!=null) {

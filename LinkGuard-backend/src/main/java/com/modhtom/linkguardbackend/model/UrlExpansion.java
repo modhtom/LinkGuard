@@ -24,6 +24,6 @@ public class UrlExpansion {
     private String description;
     @CreationTimestamp
     private Date resolvedAt;
-    @OneToOne
+    @ManyToOne
     private User resolvedBy;
 }

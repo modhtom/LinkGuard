@@ -13,9 +13,12 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository repo;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
+    private final UserRepository repo;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    public UserService(UserRepository userRepository) {
+        this.repo = userRepository;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
+    }
 
     public UserRespondDTO updateUser(String userName, UserRequestDTO userRequestDTO) {
         User existingUser = repo.findUserByUsername(userName);

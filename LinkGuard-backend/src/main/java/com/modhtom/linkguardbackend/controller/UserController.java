@@ -20,9 +20,11 @@ import java.util.UUID;
 @Tag(name = "User Profile Management", description = "Endpoints for users to manage their own profiles.")
 @SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
-
-    @Autowired
     UserService service;
+
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @Operation(
             summary = "Update a user's profile",

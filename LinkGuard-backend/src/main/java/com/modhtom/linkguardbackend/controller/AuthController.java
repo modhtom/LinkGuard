@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @Tag(name = "User Authentication", description = "Endpoints for user registration and login.")
 public class AuthController {
-    @Autowired
     AuthService service;
-
+    public AuthController(AuthService service) {
+        this.service = service;
+    }
     @Operation(
             summary = "Register a new user",
             description = "Creates a new user account and an associated empty portfolio. Returns the created user's details."

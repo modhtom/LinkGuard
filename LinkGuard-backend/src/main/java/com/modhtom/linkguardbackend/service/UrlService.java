@@ -1,5 +1,6 @@
 package com.modhtom.linkguardbackend.service;
 
+import com.modhtom.linkguardbackend.DTO.DomainTrendDTO;
 import com.modhtom.linkguardbackend.DTO.UrlRequestDTO;
 import com.modhtom.linkguardbackend.DTO.UrlRespondDTO;
 import com.modhtom.linkguardbackend.model.UrlExpansion;
@@ -8,6 +9,8 @@ import com.modhtom.linkguardbackend.repository.UserRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
@@ -21,8 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.time.Duration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UrlService {
@@ -30,14 +32,16 @@ public class UrlService {
     private final WebClient webClient;
     private final UrlRepository urlRepo;
     private final UserRepository userRepo;
+    private final StringRedisTemplate redisTemplate;
 
-    public UrlService(WebClient.Builder webClientBuilder, UrlRepository urlRepo, UserRepository userRepo) {
+    public UrlService(WebClient.Builder webClientBuilder, UrlRepository urlRepo, UserRepository userRepo, StringRedisTemplate redisTemplate) {
         HttpClient httpClient = HttpClient.create().followRedirect(false);
         this.webClient = webClientBuilder
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
         this.urlRepo = urlRepo;
         this.userRepo = userRepo;
+        this.redisTemplate = redisTemplate;
     }
 
     @Cacheable(value = URL_CACHE, key = "#request.url")
@@ -63,9 +67,11 @@ public class UrlService {
         }
         urlRepo.save(mapToUrlExpansion(principal, title, url, finalUrl, description, domain));
 
-        UrlRespondDTO responseDto = mapToUrlResponseDTO(title, url, finalUrl, description, domain);
+        redisTemplate.opsForValue().increment("domain:" + domain);
+        redisTemplate.opsForZSet().incrementScore("trending:domains", domain, 1);
+        redisTemplate.opsForZSet().incrementScore("trending:urls", finalUrl, 1);
 
-        return responseDto;
+        return mapToUrlResponseDTO(title, url, finalUrl, description, domain);
     }
     private String resolveFinalUrl(String url) {
         String currentUrl = url;
@@ -133,5 +139,20 @@ public class UrlService {
         urlExpansion.setDomain(domain);
         urlExpansion.setResolvedBy(userRepo.findUserByUsername(principal.getName()));
         return urlExpansion;
+    }
+
+    public List<DomainTrendDTO> getTopTenDomains() {
+        Set<ZSetOperations.TypedTuple<String>> topDomains =
+                redisTemplate.opsForZSet().reverseRangeWithScores("trending:domains", 0, 9);
+
+        List<DomainTrendDTO> result = new ArrayList<>();
+
+        if (topDomains != null) {
+            for (ZSetOperations.TypedTuple<String> tuple : topDomains) {
+                result.add(new DomainTrendDTO(tuple.getValue(), tuple.getScore()));
+            }
+        }
+
+        return result;
     }
 }

@@ -106,14 +106,24 @@ To stop all running containers, press `Ctrl+C` in the terminal and then run:
 ```bash
 docker-compose down
 ```
+----
 
------
+## Docker
+
+You can pull the published Docker images from  
+[modhtom/linkguard on Docker Hub](https://hub.docker.com/r/modhtom/linkguard).
+
+```bash
+docker pull modhtom/linkguard:localtest
+```
+
+----
 
 ## API Documentation & Endpoints
 
 Once the application is running, the interactive Swagger UI documentation is available at:
 
-  - [**http://localhost:8080/swagger-ui.html**](https://www.google.com/search?q=http://localhost:8080/swagger-ui.html)
+  - [**http://localhost:8080/swagger-ui.html**](http://localhost:8080/swagger-ui.html)
 
 ### Key Endpoints
 

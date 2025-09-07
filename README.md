@@ -1,6 +1,6 @@
 # LinkGuard🛡️
 
-*A secure, internal API service for expanding and analyzing shortened URLs.*
+*A secure service for expanding and analyzing shortened URLs.*
 
 LinkGuard is a secure, internal API service designed to safely expand and analyze shortened URLs and aggregating anonymized analytics on trending domains.
 

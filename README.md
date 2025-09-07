@@ -181,3 +181,11 @@ LinkGuard/
 ├── LinkGuard-frontend/     <-- (Work in Progress)
 └── README.md     <-- You are here
 ```
+
+----
+
+## TO BE ADDED
+
+- FrontEnd
+- Rate Limiting: Implement rate limiting on the /expand endpoint using Redis. (e.g., max 10 requests per minute per user).
+- Enhanced Security: Add basic malware/phishing scan by checking the domain against a curated blocklist stored in the DB.

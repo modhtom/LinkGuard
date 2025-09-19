@@ -1,0 +1,52 @@
+.card {
+  width: 100%;
+  max-width: 600px;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-left: 5px solid #007bff;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.description {
+  margin-bottom: 1.5rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.details p {
+  margin: 0.5rem 0;
+  word-break: break-all;
+}
+
+.details strong {
+  color: #000;
+}
+
+.details a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.details a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

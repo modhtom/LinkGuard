@@ -1,13 +1,13 @@
 # LinkGuard🛡️
 
-*A secure service for expanding and analyzing shortened URLs.*
+*A secure, full-stack application for expanding and analyzing shortened URLs.*
 
-LinkGuard is a secure, internal API service designed to safely expand and analyze shortened URLs and aggregating anonymized analytics on trending domains.
+LinkGuard is a secure, internal API service and web interface designed to safely expand and analyze shortened URLs. It provides real-time security insights by disarming potentially malicious links and aggregating anonymized analytics on trending domains.
 
 ---
 
 ##  Key Features
-
+-   **Full-Stack Application:** A secure REST API backend with a responsive React frontend.
 -   **User Authentication:** Secure registration and login system using JWT (JSON Web Tokens).
 -   **Secure URL Expansion:** Submits a short URL and robustly resolves the entire redirect chain to find the final destination.
 -   **Metadata Scraping:** Fetches the title and meta description from the final URL's HTML content.
@@ -21,6 +21,7 @@ LinkGuard is a secure, internal API service designed to safely expand and analyz
 ##  Tech Stack
 
 -   **Backend:** Java 21, Spring Boot 3
+-   **Frontend:** React 18+, Vite, Zustand, React Router, Axios, CSS Modules
 -   **Security:** Spring Security, JWT
 -   **Database:** PostgreSQL, Spring Data JPA
 -   **Cache & Analytics:** Redis
@@ -37,7 +38,7 @@ The application follows a standard layered architecture, fully containerized for
 
 ```mermaid
 graph TD
-    Client[Client App] --> API[Spring Boot API]
+    Client[React Frontend] --> API[Spring Boot API]
     API --> Security[Spring Security/JWT]
     API --> Service[Service Layer]
     Service --> RedisCache[(Redis Cache)]
@@ -53,7 +54,9 @@ graph TD
 
 ## Getting Started
 
-Follow these instructions to get the backend service running on your local machine for development.
+This project contains both a backend API and a frontend application. Follow the steps below to run them together for local development.
+
+## 1. Running the Backend (API)
 
 ### Prerequisites
 
@@ -106,6 +109,31 @@ To stop all running containers, press `Ctrl+C` in the terminal and then run:
 ```bash
 docker-compose down
 ```
+
+## 2. Running the Frontend (UI)
+
+The frontend is a React application powered by Vite.
+
+Open a new terminal window.
+Navigate to the frontend directory:
+
+```Bash
+cd LinkGuard/linkGuard-frontend
+```
+
+Install Dependencies:
+
+```Bash
+npm install
+```
+
+Run the Development Server:
+
+```Bash
+npm run dev
+```
+
+The frontend will start, typically on http://localhost:5173, and will open automatically in your browser. It is pre-configured to proxy API requests to the backend, so everything will work together seamlessly.
 
 -----
 
@@ -178,14 +206,13 @@ This project uses GitHub Actions for Continuous Integration. The workflow is def
 ```
 LinkGuard/
 ├── LinkGuard-backend/      <-- Spring Boot application source code
-├── LinkGuard-frontend/     <-- (Work in Progress)
-└── README.md     <-- You are here
+├── LinkGuard-frontend/     <-- React application source code
+└── README.md               <-- You are here
 ```
 
 ----
 
 ## TO BE ADDED
 
-- FrontEnd
 - Rate Limiting: Implement rate limiting on the /expand endpoint using Redis. (e.g., max 10 requests per minute per user).
 - Enhanced Security: Add basic malware/phishing scan by checking the domain against a curated blocklist stored in the DB.

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkGuard API Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #fafafa;
+      --card-bg: #ffffff;
+      --text-main: #171717;
+      --text-muted: #525252;
+      --border-color: #e5e5e5;
+      
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      
+      --get-bg: #eff6ff;
+      --get-text: #1d4ed8;
+      --get-border: #bfdbfe;
+      
+      --post-bg: #ecfdf5;
+      --post-text: #047857;
+      --post-border: #a7f3d0;
+      
+      --put-bg: #fffbeb;
+      --put-text: #b45309;
+      --put-border: #fde68a;
+      
+      --code-bg: #1e1e24;
+      --code-text: #f4f4f5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* Header styling */
+    header {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .badge-project {
+      display: inline-block;
+      background-color: #eef2ff;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 1px solid #c7d2fe;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .meta-info {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .meta-info span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Section Navigation */
+    .toc {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 40px;
+    }
+
+    .toc h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .toc ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    @media (min-width: 600px) {
+      .toc ul {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .toc a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    .toc-method {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Endpoint Card */
+    .endpoint-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 32px;
+      scroll-margin-top: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .method {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .method.get {
+      background-color: var(--get-bg);
+      color: var(--get-text);
+      border: 1px solid var(--get-border);
+    }
+
+    .method.post {
+      background-color: var(--post-bg);
+      color: var(--post-text);
+      border: 1px solid var(--post-border);
+    }
+
+    .method.put {
+      background-color: var(--put-bg);
+      color: var(--put-text);
+      border: 1px solid var(--put-border);
+    }
+
+    .path {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .auth-required {
+      font-size: 12px;
+      background-color: #faf5ff;
+      color: #7e22ce;
+      border: 1px solid #e9d5ff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .endpoint-summary {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .endpoint-description {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    /* Parameters and Payloads layout */
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 6px;
+    }
+
+    /* Table styling for parameters */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--text-muted);
+      background-color: #fcfcfc;
+    }
+
+    td.name {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+    }
+
+    td.type {
+      font-family: 'JetBrains Mono', monospace;
+      color: #0284c7;
+      font-size: 13px;
+    }
+
+    .required-flag {
+      color: #ef4444;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    /* Code Blocks */
+    .code-container {
+      background-color: var(--code-bg);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: #a1a1aa;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--code-text);
+    }
+
+    /* Responses */
+    .response-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .response-tab {
+      background: none;
+      border: 1px solid transparent;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 6px;
+      color: var(--text-muted);
+    }
+
+    .response-tab.active {
+      background-color: #f4f4f5;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .response-tab.success.active {
+      background-color: #ecfdf5;
+      color: #047857;
+      border-color: #a7f3d0;
+    }
+
+    .response-tab.error.active {
+      background-color: #fef2f2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+
+    .response-content {
+      display: none;
+    }
+
+    .response-content.active {
+      display: block;
+    }
+
+    /* Global settings info */
+    .global-info {
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 40px;
+      color: #166534;
+      font-size: 14px;
+    }
+
+    .global-info h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .global-info ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>LinkGuard API Documentation</h1>
+      <p class="subtitle">API references for the LinkGuard backend service. Includes authentication, profile management, URL expansion, and trending analytics.</p>
+      <div class="meta-info">
+        <span><strong>Base URL:</strong> http://localhost:8080</span>
+      </div>
+    </header>
+
+    <!-- Table of Contents -->
+    <section class="toc">
+      <h2>Endpoints Quick Index</h2>
+      <ul>
+        <li>
+          <a href="#register">
+            <span class="toc-method method post">POST</span> /api/auth/register
+          </a>
+        </li>
+        <li>
+          <a href="#login">
+            <span class="toc-method method post">POST</span> /api/auth/login
+          </a>
+        </li>
+        <li>
+          <a href="#me">
+            <span class="toc-method method get">GET</span> /api/users/me
+          </a>
+        </li>
+        <li>
+          <a href="#edit">
+            <span class="toc-method method put">PUT</span> /api/users/edit
+          </a>
+        </li>
+        <li>
+          <a href="#expand">
+            <span class="toc-method method post">POST</span> /api/urls/v1/expand
+          </a>
+        </li>
+        <li>
+          <a href="#trending">
+            <span class="toc-method method get">GET</span> /api/v1/analytics/trending
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Endpoints List -->
+    <main>
+
+      <!-- POST /api/auth/register -->
+      <section id="register" class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <span class="path">/api/auth/register</span>
+        </div>
+        <h2 class="endpoint-summary">Register a new user</h2>
+        <p class="endpoint-description">Creates a new user account. Returns the created user's details.</p>
+
+        <h3 class="section-title">Request Body</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name">username</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>Username for the account (3-20 characters). Example: <code>"modhtom"</code></td>
+            </tr>
+            <tr>
+              <td class="name">mail</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>User's email address. Example: <code>"modhtom@example.com"</code></td>
+            </tr>
+            <tr>
+              <td class="name">password_unHashed</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>User's password (min 6 characters). Example: <code>"password123"</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="code-container">
+          <div class="code-header"><span>JSON Payload Schema</span></div>
+          <pre><code>{
+  "username": "modhtom",
+  "mail": "modhtom@example.com",
+  "password_unHashed": "password123"
+}</code></pre>
+        </div>
+
+        <h3 class="section-title">Responses</h3>
+        <div class="response-tabs" data-endpoint="register">
+          <button class="response-tab success active" onclick="switchTab('register', '201')">201 Created</button>
+          <button class="response-tab error" onclick="switchTab('register', '400')">400 Bad Request</button>
+        </div>
+
+        <div id="register-201" class="response-content active" data-endpoint="register" data-status="201">
+          <p class="endpoint-description">User successfully created.</p>
+          <div class="code-container">
+            <div class="code-header"><span>Response Body (UserRespondDTO)</span></div>
+            <pre><code>{
+  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "username": "modhtom",
+  "mail": "modhtom@example.com",
+  "enabled": true,
+  "created_at": "2026-07-20T21:20:46Z",
+  "updated_at": "2026-07-20T21:20:46Z"
+}</code></pre>
+          </div>
+        </div>
+
+        <div id="register-400" class="response-content" data-endpoint="register" data-status="400">
+          <p class="endpoint-description">Invalid user data provided or username is already taken.</p>
+          <div class="code-container">
+            <div class="code-header"><span>Response Body</span></div>
+            <pre><code>{
+  "id": null,
+  "username": null,
+  "mail": null,
+  "enabled": false,
+  "created_at": null,
+  "updated_at": null
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- POST /api/auth/login -->
+      <section id="login" class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <span class="path">/api/auth/login</span>
+        </div>
+        <h2 class="endpoint-summary">Authenticate a user</h2>
+        <p class="endpoint-description">Verifies a user's credentials and returns a JWT (JSON Web Token) upon success.</p>
+
+        <h3 class="section-title">Request Body</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name">username</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>Username for the account. Example: <code>"modhtom"</code></td>
+            </tr>
+            <tr>
+              <td class="name">mail</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>User's email address. Example: <code>"modhtom@example.com"</code></td>
+            </tr>
+            <tr>
+              <td class="name">password_unHashed</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>User's password. Example: <code>"password123"</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="code-container">
+          <div class="code-header"><span>JSON Payload Schema</span></div>
+          <pre><code>{
+  "username": "modhtom",
+  "mail": "modhtom@example.com",
+  "password_unHashed": "password123"
+}</code></pre>
+        </div>
+
+        <h3 class="section-title">Responses</h3>
+        <div class="response-tabs" data-endpoint="login">
+          <button class="response-tab success active" onclick="switchTab('login', '200')">200 OK</button>
+          <button class="response-tab error" onclick="switchTab('login', '400')">400 Bad Request</button>
+        </div>
+
+        <div id="login-200" class="response-content active" data-endpoint="login" data-status="200">
+          <p class="endpoint-description">Authentication successful. Returns JWT string.</p>
+          <div class="code-container">
+            <div class="code-header"><span>Response Body (string)</span></div>
+            <pre><code>"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</code></pre>
+          </div>
+        </div>
+
+        <div id="login-400" class="response-content" data-endpoint="login" data-status="400">
+          <p class="endpoint-description">Invalid credentials provided.</p>
+          <div class="code-container">
+            <div class="code-header"><span>Response Body</span></div>
+            <pre><code>"Invalid username or password"</code></pre>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- GET /api/users/me -->
+      <section id="me" class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/api/users/me</span>
+          <span class="auth-required">Bearer Authentication</span>
+        </div>
+        <h2 class="endpoint-summary">Get current user's details</h2>
+        <p class="endpoint-description">Fetches the profile information for the currently authenticated user based on their JWT.</p>
+
+        <h3 class="section-title">Responses</h3>
+        <div class="response-tabs" data-endpoint="me">
+          <button class="response-tab success active" onclick="switchTab('me', '200')">200 OK</button>
+          <button class="response-tab error" onclick="switchTab('me', '401')">401 Unauthorized</button>
+        </div>
+
+        <div id="me-200" class="response-content active" data-endpoint="me" data-status="200">
+          <p class="endpoint-description">User details retrieved successfully.</p>
+          <div class="code-container">
+            <div class="code-header"><span>Response Body (UserRespondDTO)</span></div>
+            <pre><code>{
+  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "username": "modhtom",
+  "mail": "modhtom@example.com",
+  "enabled": true,
+  "created_at": "2026-07-20T21:20:46Z",
+  "updated_at": "2026-07-20T21:20:46Z"
+}</code></pre>
+          </div>
+        </div>
+
+        <div id="me-401" class="response-content" data-endpoint="me" data-status="401">
+          <p class="endpoint-description">User is not authenticated.</p>
+        </div>
+      </section>
+
+
+      <!-- PUT /api/users/edit -->
+      <section id="edit" class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method put">PUT</span>
+          <span class="path">/api/users/edit</span>
+          <span class="auth-required">Bearer Authentication</span>
+        </div>
+        <h2 class="endpoint-summary">Update a user's profile</h2>
+        <p class="endpoint-description">Allows an authenticated user to update their own profile information (e.g., email, password).</p>
+
+        <h3 class="section-title">Request Body</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name">username</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>New username. Example: <code>"modhtom"</code></td>
+            </tr>
+            <tr>
+              <td class="name">mail</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>New email address. Example: <code>"modhtom@example.com"</code></td>
+            </tr>
+            <tr>
+              <td class="name">password_unHashed</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>New plain text password. Example: <code>"password123"</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="code-container">
+          <div class="code-header"><span>JSON Payload Schema</span></div>
+          <pre><code>{
+  "username": "newUsername",
+  "mail": "newmail@example.com",
+  "password_unHashed": "newsecurepwd123"
+}</code></pre>
+        </div>
+
+        <h3 class="section-title">Responses</h3>
+        <div class="response-tabs" data-endpoint="edit">
+          <button class="response-tab success active" onclick="switchTab('edit', '200')">200 OK</button>
+          <button class="response-tab error" onclick="switchTab('edit', '400')">400 Bad Request</button>
+          <button class="response-tab error" onclick="switchTab('edit', '401')">401 Unauthorized</button>
+        </div>
+
+        <div id="edit-200" class="response-content active" data-endpoint="edit" data-status="200">
+          <p class="endpoint-description">Profile updated successfully.</p>
+          <div class="code-container">
+            <div class="code-header"><span>Response Body (UserRespondDTO)</span></div>
+            <pre><code>{
+  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "username": "newUsername",
+  "mail": "newmail@example.com",
+  "enabled": true,
+  "created_at": "2026-07-20T21:20:46Z",
+  "updated_at": "2026-07-20T21:25:34Z"
+}</code></pre>
+          </div>
+        </div>
+
+        <div id="edit-400" class="response-content" data-endpoint="edit" data-status="400">
+          <p class="endpoint-description">Invalid data provided.</p>
+        </div>
+
+        <div id="edit-401" class="response-content" data-endpoint="edit" data-status="401">
+          <p class="endpoint-description">User is not authenticated.</p>
+        </div>
+      </section>
+
+
+      <!-- POST /api/urls/v1/expand -->
+      <section id="expand" class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <span class="path">/api/urls/v1/expand</span>
+          <span class="auth-required">Bearer Authentication</span>
+        </div>
+        <h2 class="endpoint-summary">Expand short URL</h2>
+        <p class="endpoint-description">Submit a short URL and receive expanded details. Results are automatically cached in Redis.</p>
+
+        <h3 class="section-title">Request Body</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name">url</td>
+              <td class="type">string</td>
+              <td>Yes <span class="required-flag">*</span></td>
+              <td>The short URL to expand. Example: <code>"https://tinyurl.com/34775fb4"</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="code-container">
+          <div class="code-header"><span>JSON Payload Schema</span></div>
+          <pre><code>{
+  "url": "https://tinyurl.com/34775fb4"
+}</code></pre>
+        </div>
+
+        <h3 class="section-title">Responses</h3>
+        <div class="response-tabs" data-endpoint="expand">
+          <button class="response-tab success active" onclick="switchTab('expand', '200')">200 OK</button>
+          <button class="response-tab error" onclick="switchTab('expand', '400')">400 Bad Request</button>
+          <button class="response-tab error" onclick="switchTab('expand', '401')">401 Unauthorized</button>
+        </div>
+
+        <div id="expand-200" class="response-content active" data-endpoint="expand" data-status="200">
+          <p class="endpoint-description">Receive expanded details successfully.</p>
+          <div class="code-container">
+            <div class="code-header"><span>Response Body (UrlRespondDTO)</span></div>
+            <pre><code>{
+  "id": "e9b213d4-f6e5-4890-2341-a67890abcdef",
+  "shortUrl": "https://tinyurl.com/34775fb4",
+  "finalUrl": "https://example.com/target-page",
+  "domain": "example.com",
+  "title": "Example Domain Target",
+  "description": "This is the target web page that the short link redirects to."
+}</code></pre>
+          </div>
+        </div>
+
+        <div id="expand-400" class="response-content" data-endpoint="expand" data-status="400">
+          <p class="endpoint-description">Invalid URL or data provided.</p>
+        </div>
+
+        <div id="expand-401" class="response-content" data-endpoint="expand" data-status="401">
+          <p class="endpoint-description">User is not authenticated.</p>
+        </div>
+      </section>
+
+
+      <!-- GET /api/v1/analytics/trending -->
+      <section id="trending" class="endpoint-card">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/api/v1/analytics/trending</span>
+          <span class="auth-required">Bearer Authentication</span>
+        </div>
+        <h2 class="endpoint-summary">Get Trending Domains</h2>
+        <p class="endpoint-description">Fetch the top 10 expanded domains sorted by their click metrics (retrieved from Redis sorted set).</p>
+
+        <h3 class="section-title">Responses</h3>
+        <div class="response-tabs" data-endpoint="trending">
+          <button class="response-tab success active" onclick="switchTab('trending', '200')">200 OK</button>
+          <button class="response-tab error" onclick="switchTab('trending', '400')">400 Bad Request</button>
+          <button class="response-tab error" onclick="switchTab('trending', '401')">401 Unauthorized</button>
+        </div>
+
+        <div id="trending-200" class="response-content active" data-endpoint="trending" data-status="200">
+          <p class="endpoint-description">Successfully fetched trending domains.</p>
+          <div class="code-container">
+            <div class="code-header"><span>Response Body (Array&lt;DomainTrendDTO&gt;)</span></div>
+            <pre><code>[
+  {
+    "domain": "example.com",
+    "count": 42.0
+  },
+  {
+    "domain": "github.com",
+    "count": 18.0
+  }
+]</code></pre>
+          </div>
+        </div>
+
+        <div id="trending-400" class="response-content" data-endpoint="trending" data-status="400">
+          <p class="endpoint-description">Invalid parameters provided.</p>
+        </div>
+
+        <div id="trending-401" class="response-content" data-endpoint="trending" data-status="401">
+          <p class="endpoint-description">User is not authenticated.</p>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <p>LinkGuard API Documentation.</p>
+      <p>Made by <a href="https://www.modhtom.com" target="_blank">MODHTOM</a>.</p>
+    </footer>
+  </div>
+
+  <script>
+    function switchTab(endpoint, status) {
+      const tabs = document.querySelectorAll(`.response-tab[data-endpoint="${endpoint}"]`);
+      const parentContainer = document.getElementById(endpoint);
+      const buttons = parentContainer.querySelectorAll('.response-tab');
+      
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      event.currentTarget.classList.add('active');
+
+      const contents = parentContainer.querySelectorAll('.response-content');
+      contents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      const activeContent = parentContainer.querySelector(`.response-content[data-status="${status}"]`);
+      if (activeContent) {
+        activeContent.classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>

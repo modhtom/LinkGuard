@@ -109,7 +109,9 @@ To stop all running containers, press `Ctrl+C` in the terminal and then run:
 ```bash
 docker-compose down
 ```
+----
 
+<<<<<<< HEAD
 ## 2. Running the Frontend (UI)
 
 The frontend is a React application powered by Vite.
@@ -136,12 +138,24 @@ npm run dev
 The frontend will start, typically on http://localhost:5173, and will open automatically in your browser. It is pre-configured to proxy API requests to the backend, so everything will work together seamlessly.
 
 -----
+=======
+## Docker
+
+You can pull the published Docker images from  
+[modhtom/linkguard on Docker Hub](https://hub.docker.com/r/modhtom/linkguard).
+
+```bash
+docker pull modhtom/linkguard:localtest
+```
+
+----
+>>>>>>> 099a8d1db18290d7709bb2d90d2d72622f07c3ad
 
 ## API Documentation & Endpoints
 
 Once the application is running, the interactive Swagger UI documentation is available at:
 
-  - [**http://localhost:8080/swagger-ui.html**](https://www.google.com/search?q=http://localhost:8080/swagger-ui.html)
+  - [**http://localhost:8080/swagger-ui.html**](http://localhost:8080/swagger-ui.html)
 
 ### Key Endpoints
 
